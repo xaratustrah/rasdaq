@@ -81,9 +81,11 @@ def get_adc_data(adCh, CLKPin, DINPin, DOUTPin, CSPin):
 
 
 def gpio_setup():
-
+    # turn off warnings
     gpio.setwarnings(False)
-    gpio.setmode(gpio.BCM)
+
+    # we need board numbering system
+    gpio.setmode(gpio.BOARD)
 
     gpio.setup(LED, gpio.OUT)
     gpio.setup(SCLK, gpio.OUT)
@@ -105,9 +107,9 @@ def start_server(host, port):
     try:
         while True:
             topic = '10001'  # just a number for identification
+            # value = round(random.random() * 10, 3)
+            value = get_adc_data(0, SCLK, MOSI, MISO, CS)
             current_time = datetime.datetime.now().strftime('%Y-%m-%d@%H:%M:%S.%f')
-            value = round(random.random() * 10, 3)
-            #value = get_adc_data(0, SCLK, MOSI, MISO, CS)
             messagedata = current_time + ' ' + str(value)
             sock.send_string("{} {}".format(topic, messagedata))
             print("{} {}".format(topic, messagedata))
