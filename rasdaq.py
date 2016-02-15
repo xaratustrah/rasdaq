@@ -30,7 +30,8 @@ SLEEP_TIME = 0.2
 CALIBRATION = 3.3
 
 # resolution of the ADC
-RESOLUTION = 2**12
+ADC_RES = 12
+N_STEPS = 2 ** ADC_RES
 
 # assing pin numbers
 
@@ -71,7 +72,7 @@ def get_adc_data(adCh, CLKPin, DINPin, DOUTPin, CSPin):
 
     # Datenabruf
     adchvalue = 0  # Wert auf 0 zurücksetzen
-    for i in range(13):
+    for i in range(ADC_RES + 1):
         gpio.output(CLKPin, gpio.HIGH)
         gpio.output(CLKPin, gpio.LOW)
         adchvalue <<= 1  # 1 Postition nach links schieben
@@ -136,7 +137,7 @@ def start_client(host, port):
         for update_nbr in range(5):
             string = sock.recv().decode("utf-8")
             topic, time, value = string.split()
-            value = float(value) * CALIBRATION / RESOLUTION
+            value = float(value) * CALIBRATION / N_STEPS
             print(time, value)
 
     except(ConnectionRefusedError):
