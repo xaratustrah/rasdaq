@@ -35,10 +35,53 @@ MOSI = 19
 CS = 29
 
 
+# SCI Funktion
+def get_adc_data(adCh, CLKPin, DINPin, DOUTPin, CSPin):
+    """
+    Getting analog data: modifed from original:
+    https://www.raspiprojekt.de/machen/basics/schaltungen/26-analoge-signale-mit-dem-mcp3008-verarbeiten.html
+
+    -------
+
+    """
+    # Pegel definieren
+    gpio.output(CSPin, gpio.HIGH)
+    gpio.output(CSPin, gpio.LOW)
+    gpio.output(CLKPin, gpio.LOW)
+
+    cmd = adCh
+    cmd |= 0b00011000  # Kommando zum Abruf der Analogwerte des Datenkanals adCh
+
+    # Bitfolge senden
+    for i in range(5):
+        if (cmd & 0x10):  # 4. Bit prüfen und mit 0 anfangen
+            gpio.output(DINPin, gpio.HIGH)
+        else:
+            gpio.output(DINPin, gpio.LOW)
+        # Clocksignal negative Flanke erzeugen
+        gpio.output(CLKPin, gpio.HIGH)
+        gpio.output(CLKPin, gpio.LOW)
+        cmd <<= 1  # Bitfolge eine Position nach links verschieben
+
+    # Datenabruf
+    adchvalue = 0  # Wert auf 0 zurücksetzen
+    for i in range(11):
+        gpio.output(CLKPin, gpio.HIGH)
+        gpio.output(CLKPin, gpio.LOW)
+        adchvalue <<= 1  # 1 Postition nach links schieben
+        if (gpio.input(DOUTPin)):
+            adchvalue |= 0x01
+    return adchvalue
+
+
 def gpio_setup():
     gpio.setwarnings(False)
     gpio.setmode(gpio.BOARD)
     gpio.setup(LED, gpio.OUT)
+    gpio.setup(SCLK, gpio.OUT)
+    gpio.setup(CS, gpio.OUT)
+    gpio.setup(MOSI, gpio.OUT)
+    gpio.setup(MISO, gpio.IN)
 
 
 def start_server(host, port):
@@ -54,11 +97,12 @@ def start_server(host, port):
     try:
         while True:
             topic = '10001'  # just a number for identification
+            # value = round(random.random() * 10, 3)
+            value = get_adc_data(0, SCLK, MOSI, MISO, CS)
             current_time = datetime.datetime.now().strftime('%Y-%m-%d@%H:%M:%S.%f')
-            number = round(random.random() * 10, 3)
-            messagedata = current_time + ' ' + str(number)
-            print("{} {}".format(topic, messagedata))
+            messagedata = current_time + ' ' + str(value)
             sock.send_string("{} {}".format(topic, messagedata))
+            print("{} {}".format(topic, messagedata))
 
             led_state = not led_state
             gpio.output(LED, led_state)
