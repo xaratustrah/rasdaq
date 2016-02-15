@@ -11,9 +11,9 @@ import datetime, time
 import random
 import argparse
 import zmq
-from os import uname
+import os
 
-if uname().machine == 'armv7l':
+if os.name == 'posix' and os.uname().machine == 'armv7l':
     try:
         import RPi.GPIO as gpio
     except RuntimeError:
