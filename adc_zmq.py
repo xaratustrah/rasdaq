@@ -11,15 +11,20 @@ import datetime, time
 import random
 import argparse
 import zmq
+from os import uname
 
-try:
-    import RPi.GPIO as gpio
-except RuntimeError:
-    print("""Error importing RPi.GPIO!  This is probably because you need superuser privileges.
+if uname().machine == 'armv7l':
+    try:
+        import RPi.GPIO as gpio
+    except RuntimeError:
+        print("""Error importing RPi.GPIO!  This is probably because you need superuser privileges.
                 You can achieve this by using 'sudo' to run your script""")
 
 __version_info__ = (0, 0, 1)
 __version__ = '.'.join('%d' % d for d in __version_info__)
+
+# sleep time in seconds
+SLEEP_TIME = 0.2
 
 # assing pin numbers
 
@@ -58,7 +63,7 @@ def start_server(host, port):
             led_state = not led_state
             gpio.output(LED, led_state)
 
-            time.sleep(0.5)
+            time.sleep(SLEEP_TIME)
 
     except(EOFError, KeyboardInterrupt):
         print('\nUser input cancelled. Aborting...')
@@ -111,6 +116,7 @@ def main():
         port = args.port
 
     if args.server:
+
         start_server(host, port)
 
     elif args.host:
