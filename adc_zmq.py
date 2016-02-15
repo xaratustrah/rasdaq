@@ -29,6 +29,9 @@ SLEEP_TIME = 0.2
 # calibratio constant
 CALIBRATION = 3.3
 
+# resolution of the ADC
+RESOLUTION = 12
+
 # assing pin numbers
 
 LED = 31
@@ -103,7 +106,7 @@ def start_server(host, port):
         while True:
             topic = '10001'  # just a number for identification
             # value = round(random.random() * 10, 3)
-            value = get_adc_data(0, SCLK, MOSI, MISO, CS) * 3.3 / 1024
+            value = get_adc_data(0, SCLK, MOSI, MISO, CS)
             current_time = datetime.datetime.now().strftime('%Y-%m-%d@%H:%M:%S.%f')
             messagedata = current_time + ' ' + str(value)
             sock.send_string("{} {}".format(topic, messagedata))
@@ -131,7 +134,8 @@ def start_client(host, port):
         for update_nbr in range(5):
             string = sock.recv().decode("utf-8")
             topic, time, value = string.split()
-            print(time, float(value))
+            value = float(value) * CALIBRATION / RESOLUTION
+            print(time, value)
 
     except(ConnectionRefusedError):
         print('Server not running. Aborting...')
