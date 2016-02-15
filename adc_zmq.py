@@ -30,7 +30,7 @@ SLEEP_TIME = 0.2
 CALIBRATION = 3.3
 
 # resolution of the ADC
-RESOLUTION = 12
+RESOLUTION = 2**12
 
 # assing pin numbers
 
@@ -71,7 +71,7 @@ def get_adc_data(adCh, CLKPin, DINPin, DOUTPin, CSPin):
 
     # Datenabruf
     adchvalue = 0  # Wert auf 0 zurücksetzen
-    for i in range(11):
+    for i in range(13):
         gpio.output(CLKPin, gpio.HIGH)
         gpio.output(CLKPin, gpio.LOW)
         adchvalue <<= 1  # 1 Postition nach links schieben
