@@ -20,11 +20,14 @@ if os.name == 'posix' and os.uname().machine == 'armv7l':
         print("""Error importing RPi.GPIO!  This is probably because you need superuser privileges.
                 You can achieve this by using 'sudo' to run your script""")
 
-__version_info__ = (0, 0, 1)
+__version_info__ = (0, 1, 0)
 __version__ = '.'.join('%d' % d for d in __version_info__)
 
 # sleep time in seconds
 SLEEP_TIME = 0.2
+
+# calibratio constant
+CALIBRATION = 3.3
 
 # assing pin numbers
 
@@ -75,8 +78,10 @@ def get_adc_data(adCh, CLKPin, DINPin, DOUTPin, CSPin):
 
 
 def gpio_setup():
+
     gpio.setwarnings(False)
-    gpio.setmode(gpio.BOARD)
+    gpio.setmode(gpio.BCM)
+
     gpio.setup(LED, gpio.OUT)
     gpio.setup(SCLK, gpio.OUT)
     gpio.setup(CS, gpio.OUT)
@@ -98,7 +103,7 @@ def start_server(host, port):
         while True:
             topic = '10001'  # just a number for identification
             # value = round(random.random() * 10, 3)
-            value = get_adc_data(0, SCLK, MOSI, MISO, CS)
+            value = get_adc_data(0, SCLK, MOSI, MISO, CS) * 3.3 / 1024
             current_time = datetime.datetime.now().strftime('%Y-%m-%d@%H:%M:%S.%f')
             messagedata = current_time + ' ' + str(value)
             sock.send_string("{} {}".format(topic, messagedata))
