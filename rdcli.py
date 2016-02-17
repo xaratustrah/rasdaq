@@ -12,6 +12,7 @@ import random
 import argparse
 import zmq
 import os
+from version import __version__
 
 if os.name == 'posix' and os.uname().machine == 'armv7l':
     try:
@@ -20,20 +21,17 @@ if os.name == 'posix' and os.uname().machine == 'armv7l':
         print("""Error importing RPi.GPIO!  This is probably because you need superuser privileges.
                 You can achieve this by using 'sudo' to run your script""")
 
-__version_info__ = (0, 1, 0)
-__version__ = '.'.join('%d' % d for d in __version_info__)
-
 # sleep time in seconds
 SLEEP_TIME = 0.2
 
-# calibratio constant
+# calibration constant
 CALIBRATION = 3.3
 
 # resolution of the ADC
 ADC_RES = 12
 N_STEPS = 2 ** ADC_RES
 
-# assing pin numbers
+# Assing pin numbers
 
 LED = 31
 SCLK = 23
@@ -149,7 +147,7 @@ def start_client(host, port):
 
 def main():
     parser = argparse.ArgumentParser(prog='rasdaq')
-    parser.add_argument('--host', nargs=1, type=str, help='Host address', default='localhost')
+    parser.add_argument('--host', nargs=1, type=str, help='Host address', default='127.0.0.1')
     parser.add_argument('--port', nargs=1, type=int, help='Port number', default=1234)
     parser.add_argument('--version', action='version', version=__version__)
     group = parser.add_mutually_exclusive_group()
