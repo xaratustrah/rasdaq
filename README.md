@@ -1,9 +1,27 @@
 # rasdaq (RASpberry pi Data AcQuisition)
 
-`rasdaq` is a client and server code for Raspberry Pi 2. It consists of a two codes:
+`rasdaq` is a client and server code for Raspberry Pi 2 to acquire ADC Data from [MCP8208](http://www.microchip.com/wwwproducts/en/MCP3208) 12-bit ADC converter chip. The [SPI](https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus) interface is emulated using Raspberry PI's GPIO pin, the way that is described in [this tutorial](https://www.raspiprojekt.de/machen/basics/schaltungen/26-analoge-signale-mit-dem-mcp3008-verarbeiten.html). An alternative would be to use raspberry pi's processor's own SPI interface, which is not applied here in this code. The underlying messaging is accomplished using [Zero MQ](http://zeromq.org/) library in PUB/SUB mode. 
+
+The code consists of a separate parts:
  
 * `rdcli` is the command line interface (CLI) for client and server
-* `rdgui` is just a GUI client for visual purposes written in PyQt5.
+* `rdgui` is just a GUI client (viewer) for visual inspection written in QT5 (PyQt5).
+
+
+#### Hardware connection
+Follow the description on the tutorial mentioned above. Additionally what has been changed here is the following pin numbering:
+
+
+| Name | Pin No. |
+|------|---------|
+| SCLK | 23      |
+| MISO | 21      |
+| MOSI | 19      |
+| CS   | 29      |
+| LED  | 31      |
+
+
+As you can see, an additional LED is connected to the raspberry with a 330 ohm resistor in between.
 
 #### Installation of Raspbian
 
@@ -13,7 +31,7 @@ Later you can use `dd` to copy the image. E.g. on OSX you would type:
 
     sudo dd bs=1m if=2015-11-21-raspbian-jessie.img of=/dev/rdisk4
 
-After booting you need to find out the IP address just by connecting to a router. The router's own web page and find out the IP or MAC address. There are also other methods available under linux.
+After booting if you have a HDMI television and keyboard attached then you can see your IP address of course, but if you like me are only connected to internet without any display then you need to find out the IP address just by connecting to a router. Open router's own web page and find out the IP or MAC address. There are also other methods available under linux.
 
 
 #### Installation on Raspi
@@ -44,3 +62,9 @@ and accordingly the client by:
     ./rdcli ./--host IP_ADRESS --port 1234 --client
 
 It is recommended to use numerals for IP address.
+To print out the help, type:
+
+    ./rdcli --help
+    
+## Acknowledgements
+Many thanks goes to [carlkl](https://github.com/carlkl) for pointing out the wonderful ZeroMQ library.

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>422</width>
+    <width>472</width>
     <height>449</height>
    </rect>
   </property>
@@ -30,7 +30,7 @@
    <item>
     <widget class="QLabel" name="labelTitle">
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:24pt; font-weight:600; text-decoration: underline;&quot;&gt;rasdaq&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:24pt; font-weight:600; text-decoration: underline; color:#ff0000;&quot;&gt;rasdaq&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-family:'Menlo'; font-size:24pt; font-weight:600; color:#000000;&quot;&gt;(&lt;/span&gt;&lt;span style=&quot; font-family:'Menlo'; font-size:24pt; font-weight:600; color:#ff0000;&quot;&gt;RAS&lt;/span&gt;&lt;span style=&quot; font-family:'Menlo'; font-size:24pt; font-weight:600; color:#000000;&quot;&gt;pberry pi &lt;/span&gt;&lt;span style=&quot; font-family:'Menlo'; font-size:24pt; font-weight:600; color:#ff0000;&quot;&gt;D&lt;/span&gt;&lt;span style=&quot; font-family:'Menlo'; font-size:24pt; font-weight:600; color:#000000;&quot;&gt;ata &lt;/span&gt;&lt;span style=&quot; font-family:'Menlo'; font-size:24pt; font-weight:600; color:#ff0000;&quot;&gt;A&lt;/span&gt;&lt;span style=&quot; font-family:'Menlo'; font-size:24pt; font-weight:600; color:#000000;&quot;&gt;c&lt;/span&gt;&lt;span style=&quot; font-family:'Menlo'; font-size:24pt; font-weight:600; color:#ff0000;&quot;&gt;Q&lt;/span&gt;&lt;span style=&quot; font-family:'Menlo'; font-size:24pt; font-weight:600; color:#000000;&quot;&gt;uisition)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
    </item>
@@ -47,7 +47,7 @@
    <item>
     <widget class="QLabel" name="labelDescription">
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;A visualizer DCCT current.&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Copyright (c) Shahab Sanjari 2016.&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;License: GPLv3&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;A visualizer for sorage ring's DCCT current.&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Copyright (c) Shahab Sanjari 2016.&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;License: GPLv3&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
    </item>
