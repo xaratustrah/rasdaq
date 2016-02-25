@@ -29,9 +29,9 @@ It is recommended to download the full `raspbian` version, since the full python
 
 Later you can use `dd` to copy the image. E.g. on OSX you would type: 
 
-    sudo dd bs=1m if=2015-11-21-raspbian-jessie.img of=/dev/rdisk4
+    sudo dd bs=1m if=2015-11-21-raspbian-jessie.img of=/dev/rdiskN
 
-After booting if you have a HDMI television and keyboard attached then you can see your IP address of course, but if you like me are only connected to internet without any display then you need to find out the IP address just by connecting to a router. Open router's own web page and find out the IP or MAC address. There are also other methods available under linux.
+where you have to make sure, what the number **N** above is. In my case it was 4. After booting if you have a HDMI television and keyboard attached then you can see your IP address of course, but if you like me are only connected to internet without any display then you need to find out the IP address just by connecting to a router. Open router's own web page and find out the IP or MAC address. There are also other methods available under linux.
 
 
 #### Installation on Raspi
