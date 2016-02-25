@@ -27,11 +27,19 @@ As you can see, an additional LED is connected to the raspberry with a 330 ohm r
 
 It is recommended to download the full `raspbian` version, since the full python is included, from [here](https://www.raspbian.org/). You can check the `shasum` before installation to make sure it is the original file.
 
-Later you can use `dd` to copy the image. E.g. on OSX you would type: 
+Later you can use `dd` to copy the image. The procedure on OSX would be e.g.: Identify the name of the SD Card:
+
+    diskutil list
+
+in my case it was `/dev/disk2`. The unmount it:
+
+    diskutil unmountDisk /dev/disk2
+    
+then use the `dd` to copy:
 
     sudo dd bs=1m if=2015-11-21-raspbian-jessie.img of=/dev/rdiskN
 
-where you have to make sure, what the number **N** above is. In my case it was 4. After booting if you have a HDMI television and keyboard attached then you can see your IP address of course, but if you like me are only connected to internet without any display then you need to find out the IP address just by connecting to a router. Open router's own web page and find out the IP or MAC address. There are also other methods available under linux.
+you can use `ctrl-T` to check the progress. After booting if you have a HDMI television and keyboard attached then you can see your IP address of course, but if you like me are only connected to internet without any display then you need to find out the IP address just by connecting to a router. Open router's own web page and find out the IP or MAC address. There are also other methods available under linux.
 
 
 #### Installation on Raspi
