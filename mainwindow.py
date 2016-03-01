@@ -6,19 +6,12 @@ Xaratustrah
 
 """
 
-from PyQt5.QtWidgets import QMainWindow, QDialog
-from PyQt5.QtCore import Qt, QCoreApplication
+from PyQt5.QtWidgets import QMainWindow, QDialog, QInputDialog, QLineEdit
+from PyQt5.QtCore import Qt, QCoreApplication, QThread, QTimer
 from mainwindow_ui import Ui_MainWindow
 from aboutdialog_ui import Ui_AbooutDialog
-import os, zmq
+from zmq_listener import ZMQListener
 from version import __version__
-
-# calibration constant
-CALIBRATION = 3.3
-
-# resolution of the ADC
-ADC_RES = 12
-N_STEPS = 2 ** ADC_RES
 
 
 class mainWindow(QMainWindow, Ui_MainWindow):
@@ -26,7 +19,7 @@ class mainWindow(QMainWindow, Ui_MainWindow):
     The main class for the GUI window
     """
 
-    def __init__(self, host, port):
+    def __init__(self):
         """
         The constructor and initiator.
         :return:
@@ -35,13 +28,25 @@ class mainWindow(QMainWindow, Ui_MainWindow):
         super(mainWindow, self).__init__()
         self.setupUi(self)
 
-        self.host = host
-        self.port = port
 
-        # UI related stuff
+        text, ok = QInputDialog.getText(self, 'Settings', 'Enter the host address:', QLineEdit.Normal, '127.0.0.1')
+        if ok:
+            host = str(text)
+        text, ok = QInputDialog.getText(self, 'Settings', 'Enter the port number:', QLineEdit.Normal, '1234')
+        if ok:
+            port = int(text)
+
+        self.thread = QThread()
+        self.zeromq_listener = ZMQListener(host, port)
+        self.zeromq_listener.moveToThread(self.thread)
+
+        self.thread.started.connect(self.zeromq_listener.loop)
+
+        # Connect signals
         self.connect_signals()
 
-        self.show_message('Moin!')
+        QTimer.singleShot(0, self.thread.start)
+        self.show_message('Connected to server: {}:{}'.format(host, port))
 
     def connect_signals(self):
         """
@@ -51,21 +56,17 @@ class mainWindow(QMainWindow, Ui_MainWindow):
 
         # Action about and Action quit will be shown differently in OSX
 
-        self.actionAbout.triggered.connect(self.showAboutDialog)
+        self.actionAbout.triggered.connect(self.show_about_dialog)
         self.actionQuit.triggered.connect(QCoreApplication.instance().quit)
-        # self.actionLoad_Freqlist.triggered.connect(self.save_file_dialog)
+        self.zeromq_listener.message.connect(self.signal_received)
 
-    def showAboutDialog(self):
-        """
-        Show about dialog
-        :return:
-        """
-        about_dialog = QDialog()
-        about_dialog.ui = Ui_AbooutDialog()
-        about_dialog.ui.setupUi(about_dialog)
-        about_dialog.ui.labelVersion.setText('Version: {}'.format(__version__))
-        about_dialog.exec_()
-        about_dialog.show()
+    def signal_received(self, message):
+        self.lcdNumber.display(float(message))
+
+    def closeEvent(self, event):
+        self.zeromq_listener.running = False
+        self.thread.quit()
+        self.thread.wait()
 
     def show_message(self, message):
         """
@@ -76,23 +77,14 @@ class mainWindow(QMainWindow, Ui_MainWindow):
         """
         self.statusbar.showMessage(message)
 
-    def start_client(self):
-        context = zmq.Context()
-        self.show_message('Client started. ctrl-c to abort.\n')
-        try:
-            sock = context.socket(zmq.SUB)
-            sock.connect("tcp://{}:{}".format(self.host, self.port))
-            topic_filter = '10001'
-            sock.setsockopt_string(zmq.SUBSCRIBE, topic_filter)
-
-            for update_nbr in range(5):
-                string = sock.recv().decode("utf-8")
-                topic, time, value = string.split()
-                value = float(value) * CALIBRATION / N_STEPS
-                self.show_message(time, value)
-
-        except(ConnectionRefusedError):
-            self.show_message('Server not running. Aborting...')
-
-        except(EOFError, KeyboardInterrupt):
-            self.show_message('\nUser input cancelled. Aborting...')
+    def show_about_dialog(self):
+        """
+        Show about dialog
+        :return:
+        """
+        about_dialog = QDialog()
+        about_dialog.ui = Ui_AbooutDialog()
+        about_dialog.ui.setupUi(about_dialog)
+        about_dialog.ui.labelVersion.setText('Version: {}'.format(__version__))
+        about_dialog.exec_()
+        about_dialog.show()

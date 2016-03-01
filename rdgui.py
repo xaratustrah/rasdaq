@@ -11,14 +11,13 @@ import sys
 from PyQt5.QtWidgets import QApplication
 from mainwindow import mainWindow
 
-
 def main():
     """
     Start the application
     :return:
     """
     app = QApplication(sys.argv)
-    form = mainWindow("127.0.0.1", 1234)
+    form = mainWindow()
     form.show()
     sys.exit(app.exec_())
 
