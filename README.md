@@ -75,4 +75,4 @@ To print out the help, type:
     ./rdcli --help
     
 ## Acknowledgements
-Many thanks goes to [carlkl](https://github.com/carlkl) for pointing out the wonderful ZeroMQ library.
+Many thanks goes to [HoSnoopy](https://github.com/HoSnoopy) for pointing out a link to the tutorial and [carlkl](https://github.com/carlkl) for pointing out the wonderful ZeroMQ library.

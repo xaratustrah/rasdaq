@@ -10,7 +10,7 @@ https://wiki.python.org/moin/PyQt/Writing%20a%20client%20for%20a%20zeromq%20serv
 
 
 """
-from PyQt5.QtCore import pyqtSignal, QObject
+from PyQt5.QtCore import pyqtSignal, QThread
 import zmq
 
 # calibration constant
@@ -21,27 +21,30 @@ ADC_RES = 12
 N_STEPS = 2 ** ADC_RES
 
 
-class ZMQListener(QObject):
+class ZMQListener(QThread):
     message = pyqtSignal(str)
+    err_msg = pyqtSignal(str)
 
     def __init__(self, host, port):
-        QObject.__init__(self)
+        QThread.__init__(self)
 
         self.host = host
         self.port = port
+        self.running = True
+
         context = zmq.Context()
+
         try:
             self.sock = context.socket(zmq.SUB)
             self.sock.connect("tcp://{}:{}".format(self.host, self.port))
             topic_filter = '10001'
             self.sock.setsockopt_string(zmq.SUBSCRIBE, topic_filter)
+
         except(ConnectionRefusedError):
-            print('Server not running. Aborting...')
+            self.err_msg.emit('Server not running. Aborting...')
 
         except(EOFError, KeyboardInterrupt):
-            print('\nUser input cancelled. Aborting...')
-
-        self.running = True
+            self.err_msg.emit('User input cancelled. Aborting...')
 
     def loop(self):
         while self.running:
@@ -50,3 +53,9 @@ class ZMQListener(QObject):
             value = float(value) * CALIBRATION / N_STEPS
             value = int(value * 100) / 100
             self.message.emit(str(value))
+            # self.message.emit('{:.2e}'.format(value))
+
+    def __del__(self):
+        self.terminate()
+        self.quit()
+        self.wait()
