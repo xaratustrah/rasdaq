@@ -32,7 +32,7 @@ class mainWindow(QMainWindow, Ui_MainWindow):
         # self.zeromq_listener = None
 
         self.connected = False
-
+        # self.zeromq_listener = None
         # text, ok = QInputDialog.getText(self, 'Settings', 'Enter the host address:', QLineEdit.Normal, '127.0.0.1')
         # if ok:
         #     host = str(text)
@@ -57,6 +57,8 @@ class mainWindow(QMainWindow, Ui_MainWindow):
                 self.show_message('Please enter valid numeric IP address and port number.')
                 return
 
+            # self.zeromq_listener = None
+            # del self.zeromq_listener
             self.zeromq_listener = ZMQListener(host, port)
             self.zeromq_listener.moveToThread(self.thread)
             self.zeromq_listener.message.connect(self.signal_received)
@@ -83,8 +85,15 @@ class mainWindow(QMainWindow, Ui_MainWindow):
         # Action about and Action quit will be shown differently in OSX
 
         self.actionAbout.triggered.connect(self.show_about_dialog)
-        self.actionQuit.triggered.connect(QCoreApplication.instance().quit)
+        self.actionQuit.triggered.connect(self.shutdown)
         self.pushButton.clicked.connect(self.on_push_button_clicked)
+
+    def shutdown(self):
+        self.zeromq_listener.running = False
+        self.thread.terminate()
+        self.thread.quit()
+        self.thread.wait()
+        QCoreApplication.instance().quit()
 
     def signal_received(self, message):
         # in case more digits are needed

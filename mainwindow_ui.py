@@ -82,7 +82,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "rdgui"))
         self.groupBox.setTitle(_translate("MainWindow", "ESR current [mA]"))
         self.groupBox_2.setTitle(_translate("MainWindow", "Server"))
         self.label.setText(_translate("MainWindow", "Host IP:"))
