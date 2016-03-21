@@ -8,63 +8,42 @@ Xaratustrah
 """
 
 from distutils.core import setup
-import py2exe
-import matplotlib
 from version import __version__
+from glob import glob
+import PyQt5
+import py2exe
 
-name = 'rdgui'
+NAME = 'rdgui'
 
-pkgs = []
+packages = []
 
-includes = ['sip',
-            'PyQt5',
-            'PyQt5.QtWidgets',
-            'PyQt5.QtCore',
-            'PyQt5.QtGui',
-            'zmq',
-            ]
+includes = ['sip', 'atexit', 'zmq', ]
 
-excludes = ['pkg_resources',
-            'doctest',
-            'pdb',
-            'optparse',
-            'jsonschema',
-            'tornado',
-            'setuptools',
-            'urllib2',
-            'tkinter']
+excludes = None
 
-options = {'bundle_files': 3,
-           # 'optimize': 2,
-           'compressed': True,
-           'includes': includes,
-           'excludes': excludes,
-           'packages': pkgs
-           }
+options = {
+    'optimize': 2,
+    'compressed': True,
+    'includes': includes,
+    'excludes': excludes,
+    'packages': packages
+}
 
-datafiles = matplotlib.get_py2exe_datafiles() + \
-            [("platforms", ["C:\\Python34\\Lib\\site-packages\\PyQt5\\plugins\\platforms\\qwindows.dll"]),
-             ("", [r"c:\windows\syswow64\MSVCP100.dll", r"C:\Windows\System32\MSVCR100.dll"]),
-             ("", [r"C:\Python34\Lib\site-packages\numpy\core\libifcoremd.dll"]),
-             ("", [r"C:\Python34\Lib\site-packages\numpy\core\libifportmd.dll"]),
-             ("", [r"C:\Python34\Lib\site-packages\numpy\core\libiomp5md.dll"]),
-             ("", [r"C:\Python34\Lib\site-packages\numpy\core\svml_dispmd.dll"]),
-             ("", [r"C:\Python34\Lib\site-packages\numpy\core\libiompstubs5md.dll"]),
-             ("", [r"C:\Python34\Lib\site-packages\numpy\core\libmmd.dll"]),
-             ("", [r"C:\Python34\Lib\site-packages\spectrum\mydpss.pyd"])
-             ]
+data_files = []
+
+qt_platform_plugins = [('platforms', glob(PyQt5.__path__[0] + r'\plugins\platforms\*.*'))]
+data_files.extend(qt_platform_plugins)
 
 setup(
-    name=name,
+    name=NAME,
     version=__version__,
-    url='https://github.com/xaratustrah/iq_suite',
-    license='GPL V 3.0',
+    url='https://github.com/xaratustrah/barion',
+    license='GPLv.3',
     zipfile=None,
-    data_files=datafiles,
+    data_files=data_files,
     windows=[{
-        'script': 'rdgui.py',
-        # 'icon_resources': [(1, 'rsrc/icon.ico')],
-        'dest_base': 'rdgui'
+        'script': 'barion.py',
+        'icon_resources': [(1, 'rsrc/icon.ico')]
     }],
     options={'py2exe': options}
 )
