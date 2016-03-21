@@ -15,7 +15,7 @@ import py2exe
 
 NAME = 'rdgui'
 
-packages = []
+packages = ['zmq']
 
 includes = ['sip', 'atexit', 'zmq', ]
 
@@ -37,13 +37,13 @@ data_files.extend(qt_platform_plugins)
 setup(
     name=NAME,
     version=__version__,
-    url='https://github.com/xaratustrah/barion',
+    url='https://github.com/xaratustrah/rasdaq',
     license='GPLv.3',
     zipfile=None,
     data_files=data_files,
     windows=[{
-        'script': 'barion.py',
-        'icon_resources': [(1, 'rsrc/icon.ico')]
+        'script': 'rdgui.py',
+        #'icon_resources': [(1, 'rsrc/icon.ico')]
     }],
     options={'py2exe': options}
 )
