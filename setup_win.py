@@ -17,7 +17,7 @@ import zmq.libzmq
 
 NAME = 'rdgui'
 
-packages = ['zmq']
+packages = []
 
 includes = ['sip', 'atexit', 'zmq', 'zmq.backend.cython']
 
