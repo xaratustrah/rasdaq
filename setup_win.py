@@ -17,12 +17,12 @@ import zmq.libzmq
 
 NAME = 'rdgui'
 
-packages = []
+packages = ['zmq']
 
-includes = ['sip', 'atexit', 'zmq', 'zmq.backend.cython']
+includes = ['sip', 'atexit']
 
-excludes = ['zmq.libzmq']
-dll_excludes = ['libzmq.pyd']
+excludes = ['zmq.libzmq', 'zmq.libsodium']
+dll_excludes = []
 
 options = {
     'optimize': 2,
@@ -33,10 +33,10 @@ options = {
     'packages': packages
 }
 
-data_files = []
+data_files = [('lib', (zmq.libzmq.__file__,))]
 
 qt_platform_plugins = [('platforms', glob(PyQt5.__path__[0] + r'\plugins\platforms\*.*'))]
-zmq_plugin = [('', glob(zmq.__path__[0] + r'\backend\cython\error.pyd'))]
+zmq_plugin = [('', glob(zmq.__path__[0] + r'\*.pyd'))]
 
 data_files.extend(qt_platform_plugins)
 data_files.extend(zmq_plugin)
