@@ -50,7 +50,7 @@ setup(
     data_files=data_files,
     windows=[{
         'script': 'rdgui.py',
-        #'icon_resources': [(1, 'rsrc/icon.ico')]
+        'icon_resources': [(1, 'rsrc/icon.ico')]
     }],
     options={'py2exe': options}
 )
