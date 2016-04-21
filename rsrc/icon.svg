@@ -16,10 +16,10 @@
    width="1024"
    height="1024"
    viewBox="0 0 1024 1024"
-   sodipodi:docname="rasdaq.svg"
-   inkscape:export-filename="/Users/shahab/Desktop/16.png"
-   inkscape:export-xdpi="1.41"
-   inkscape:export-ydpi="1.41"><metadata
+   sodipodi:docname="icon.svg"
+   inkscape:export-filename="/Users/shahab/Desktop/icon_128x128.png"
+   inkscape:export-xdpi="11.25"
+   inkscape:export-ydpi="11.25"><metadata
      id="metadata8"><rdf:RDF><cc:Work
          rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
@@ -58,7 +58,7 @@
      id="namedview4"
      showgrid="false"
      inkscape:zoom="0.86265563"
-     inkscape:cx="732.82168"
+     inkscape:cx="463.8847"
      inkscape:cy="511.73177"
      inkscape:window-x="0"
      inkscape:window-y="1"
