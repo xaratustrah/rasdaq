@@ -39,6 +39,13 @@ MISO = 21
 MOSI = 19
 CS = 29
 
+RNG0 = 3
+RNG1 = 5
+RNG2 = 7
+MODD = 11
+RDDY = 13
+PWWR = 15
+
 
 # SCI Funktion
 def get_adc_data(adCh, CLKPin, DINPin, DOUTPin, CSPin):
@@ -79,6 +86,12 @@ def get_adc_data(adCh, CLKPin, DINPin, DOUTPin, CSPin):
     return adchvalue
 
 
+def get_gpio_status_bits():
+    gpio_status_bits = [gpio.input(PWWR), gpio.input(RDDY), gpio.input(MODD), gpio.input(RNG2), gpio.input(RNG1),
+                        gpio.input(RNG0)]
+    return ''.join([str(int(elem)) for elem in gpio_status_bits])
+
+
 def gpio_setup():
     # turn off warnings
     gpio.setwarnings(False)
@@ -91,6 +104,13 @@ def gpio_setup():
     gpio.setup(CS, gpio.OUT)
     gpio.setup(MOSI, gpio.OUT)
     gpio.setup(MISO, gpio.IN)
+
+    gpio.setup(PWWR, gpio.IN)
+    gpio.setup(RDDY, gpio.IN)
+    gpio.setup(MODD, gpio.IN)
+    gpio.setup(RNG2, gpio.IN)
+    gpio.setup(RNG1, gpio.IN)
+    gpio.setup(RNG0, gpio.IN)
 
 
 def start_server(host, port):
@@ -107,9 +127,10 @@ def start_server(host, port):
         while True:
             topic = '10001'  # just a number for identification
             # value = round(random.random() * 10, 3)
+            stat_bits = get_gpio_status_bits()
             value = get_adc_data(0, SCLK, MOSI, MISO, CS)
             current_time = datetime.datetime.now().strftime('%Y-%m-%d@%H:%M:%S.%f')
-            messagedata = current_time + ' ' + str(value)
+            messagedata = current_time + ' ' + stat_bits + ' ' + str(value)
             sock.send_string("{} {}".format(topic, messagedata))
             print("{} {}".format(topic, messagedata))
 
@@ -134,9 +155,9 @@ def start_client(host, port):
 
         for update_nbr in range(5):
             string = sock.recv().decode("utf-8")
-            topic, time, value = string.split()
-            value = float(value) * CALIBRATION / N_STEPS
-            print(time, value)
+            topic, time, stat_bits, value = string.split()
+            # value = float(value) * CALIBRATION / N_STEPS
+            print(time, stat_bits, value)
 
     except(ConnectionRefusedError):
         print('Server not running. Aborting...')
