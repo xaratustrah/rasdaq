@@ -69,7 +69,7 @@ def get_adc_data(adCh, CLKPin, DINPin, DOUTPin, CSPin):
         cmd <<= 1  # Bitfolge eine Position nach links verschieben
 
     # Datenabruf
-    adchvalue = 0  # Wert auf 0 zurücksetzen
+    adchvalue = 0  # Wert auf 0 zuruecksetzen
     for i in range(ADC_RES + 1):
         gpio.output(CLKPin, gpio.HIGH)
         gpio.output(CLKPin, gpio.LOW)
