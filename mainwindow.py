@@ -29,16 +29,8 @@ class mainWindow(QMainWindow, Ui_MainWindow):
         super(mainWindow, self).__init__()
         self.setupUi(self)
         self.thread = QThread()
-        # self.zeromq_listener = None
 
         self.connected = False
-        # self.zeromq_listener = None
-        # text, ok = QInputDialog.getText(self, 'Settings', 'Enter the host address:', QLineEdit.Normal, '127.0.0.1')
-        # if ok:
-        #     host = str(text)
-        # text, ok = QInputDialog.getText(self, 'Settings', 'Enter the port number:', QLineEdit.Normal, '1234')
-        # if ok:
-        #     port = int(text)
 
         # Connect signals
         self.connect_signals()
@@ -57,21 +49,18 @@ class mainWindow(QMainWindow, Ui_MainWindow):
                 self.show_message('Please enter valid numeric IP address and port number.')
                 return
 
-            # self.zeromq_listener = None
-            # del self.zeromq_listener
-            self.zeromq_listener = ZMQListener(host, port)
-            self.zeromq_listener.moveToThread(self.thread)
-            self.zeromq_listener.message.connect(self.signal_received)
-            self.zeromq_listener.err_msg.connect(self.show_message)
+            self.zeromq_listener_10001 = ZMQListener(host, port, '10001')
+            self.zeromq_listener_10001.moveToThread(self.thread)
+            self.zeromq_listener_10001.message.connect(self.signal_received_10001)
+            self.zeromq_listener_10001.err_msg.connect(self.show_message)
 
-            self.thread.started.connect(self.zeromq_listener.loop)
-            # QTimer.singleShot(0, self.thread.start# )
+            self.thread.started.connect(self.zeromq_listener_10001.loop)
             self.thread.start()
 
             self.pushButton.setText('Stop')
             self.show_message('Connected to server: {}:{}'.format(host, port))
         else:
-            self.zeromq_listener.running = False
+            self.zeromq_listener_10001.running = False
             self.thread.terminate()
             self.pushButton.setText('Start')
             self.show_message('Disconnected.')
@@ -89,22 +78,22 @@ class mainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton.clicked.connect(self.on_push_button_clicked)
 
     def shutdown(self):
-        self.zeromq_listener.running = False
+        self.zeromq_listener_10001.running = False
         self.thread.terminate()
         self.thread.quit()
         self.thread.wait()
         QCoreApplication.instance().quit()
 
-    def signal_received(self, message):
+    def signal_received_10001(self, message):
         # in case more digits are needed
         # self.lcdNumber.setDigitCount(8)
-        if self.zeromq_listener.running:
+        if self.zeromq_listener_10001.running:
             self.lcdNumber.display(float(message))
         else:
             self.lcdNumber.display(0)
 
     def closeEvent(self, event):
-        self.zeromq_listener.running = False
+        self.zeromq_listener_10001.running = False
         self.thread.terminate()
         self.thread.quit()
         self.thread.wait()

@@ -25,11 +25,12 @@ class ZMQListener(QThread):
     message = pyqtSignal(str)
     err_msg = pyqtSignal(str)
 
-    def __init__(self, host, port):
+    def __init__(self, host, port, topic_filter):
         QThread.__init__(self)
 
         self.host = host
         self.port = port
+        self.topic_filter = topic_filter
         self.running = True
 
         context = zmq.Context()
@@ -37,8 +38,7 @@ class ZMQListener(QThread):
         try:
             self.sock = context.socket(zmq.SUB)
             self.sock.connect("tcp://{}:{}".format(self.host, self.port))
-            topic_filter = '10001'
-            self.sock.setsockopt_string(zmq.SUBSCRIBE, topic_filter)
+            self.sock.setsockopt_string(zmq.SUBSCRIBE, self.topic_filter)
 
         except(ConnectionRefusedError):
             self.err_msg.emit('Server not running. Aborting...')
