@@ -59,7 +59,7 @@ def get_adc_data(adCh, CLKPin, DINPin, DOUTPin, CSPin):
 
     # Bitfolge senden
     for i in range(5):
-        if (cmd & 0x10):  # 4. Bit prüfen und mit 0 anfangen
+        if (cmd & 0x10):  # 4. Bit pruefen und mit 0 anfangen
             gpio.output(DINPin, gpio.HIGH)
         else:
             gpio.output(DINPin, gpio.LOW)
