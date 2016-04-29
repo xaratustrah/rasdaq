@@ -14,6 +14,14 @@ from zmq_listener import ZMQListener
 from ipaddress import ip_address
 from version import __version__
 
+# Calibration constants
+CAL_SLOPE = 1216.5958576739247
+CAL_ITCPT = -15.558682952735126
+
+# ADC Voltage
+RAIL_VOLTAGE = 3.3
+ADC_QUANTIZATION = 2 ** 12  # for 12 bit ADC
+
 
 class mainWindow(QMainWindow, Ui_MainWindow):
     """
@@ -88,35 +96,29 @@ class mainWindow(QMainWindow, Ui_MainWindow):
 
     def signal_received_10001(self, message):
         # get the message and split it
-        topic, time, stat_bits, value = message.split()
+        topic, time, stat_bits, value_str = message.split()
         current_range = int(stat_bits[-3:], 2)
         range_str = self.range_dict_esr_system[current_range]
 
-        print(message)
-        print(time)
-        print(stat_bits)
-        print(range_str)
-        print(value)
-
-
-        # calibration constant
-        CALIBRATION = 3.3
-
-        # resolution of the ADC
-        ADC_RES = 12
-        N_STEPS = 2 ** ADC_RES
+        self.label_time_stamp.setText(time)
+        self.label_status.setText(stat_bits)
+        self.label_range.setText(range_str)
 
         # do the calibration
-        #value = float(value) * CALIBRATION / N_STEPS
-        #value = int(value * 100) / 100
+        value_float = float(value_str) * CAL_SLOPE + CAL_ITCPT
+
+        # convert binary to float value
+        value = value_float * RAIL_VOLTAGE / ADC_QUANTIZATION
+
+        # set to 2 decimal points
+        value = int(value * 100) / 100
 
         # in case more digits are needed
-        # self.message('{:.2e}'.format(value))
         # self.lcdNumber.setDigitCount(8)
-        #if self.zeromq_listener_10001.running:
-        #    self.lcdNumber.display(float(value))
-        #else:
-        #    self.lcdNumber.display(0)
+        if self.zeromq_listener_10001.running:
+            self.lcdNumber.display(value)
+        else:
+            self.lcdNumber.display(0)
 
     def closeEvent(self, event):
         self.zeromq_listener_10001.running = False
