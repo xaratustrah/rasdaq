@@ -13,13 +13,6 @@ https://wiki.python.org/moin/PyQt/Writing%20a%20client%20for%20a%20zeromq%20serv
 from PyQt5.QtCore import pyqtSignal, QThread
 import zmq
 
-# calibration constant
-CALIBRATION = 3.3
-
-# resolution of the ADC
-ADC_RES = 12
-N_STEPS = 2 ** ADC_RES
-
 
 class ZMQListener(QThread):
     message = pyqtSignal(str)
@@ -48,12 +41,8 @@ class ZMQListener(QThread):
 
     def loop(self):
         while self.running:
-            string = self.sock.recv()
-            topic, time, value = string.split()
-            value = float(value) * CALIBRATION / N_STEPS
-            value = int(value * 100) / 100
-            self.message.emit(str(value))
-            # self.message.emit('{:.2e}'.format(value))
+            ba = self.sock.recv()
+            self.message.emit(ba.decode("utf-8"))
 
     def __del__(self):
         self.terminate()

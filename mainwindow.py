@@ -29,6 +29,8 @@ class mainWindow(QMainWindow, Ui_MainWindow):
         super(mainWindow, self).__init__()
         self.setupUi(self)
         self.thread = QThread()
+        self.range_dict_esr_system = {0: '1000mA', 1: '300mA', 2: '100mA', 3: '30mA', 4: '10mA', 5: '3mA', 6: '1mA',
+                                      7: '0.3mA'}
 
         self.connected = False
 
@@ -85,12 +87,36 @@ class mainWindow(QMainWindow, Ui_MainWindow):
         QCoreApplication.instance().quit()
 
     def signal_received_10001(self, message):
+        # get the message and split it
+        topic, time, stat_bits, value = message.split()
+        current_range = int(stat_bits[-3:], 2)
+        range_str = self.range_dict_esr_system[current_range]
+
+        print(message)
+        print(time)
+        print(stat_bits)
+        print(range_str)
+        print(value)
+
+
+        # calibration constant
+        CALIBRATION = 3.3
+
+        # resolution of the ADC
+        ADC_RES = 12
+        N_STEPS = 2 ** ADC_RES
+
+        # do the calibration
+        #value = float(value) * CALIBRATION / N_STEPS
+        #value = int(value * 100) / 100
+
         # in case more digits are needed
+        # self.message('{:.2e}'.format(value))
         # self.lcdNumber.setDigitCount(8)
-        if self.zeromq_listener_10001.running:
-            self.lcdNumber.display(float(message))
-        else:
-            self.lcdNumber.display(0)
+        #if self.zeromq_listener_10001.running:
+        #    self.lcdNumber.display(float(value))
+        #else:
+        #    self.lcdNumber.display(0)
 
     def closeEvent(self, event):
         self.zeromq_listener_10001.running = False
