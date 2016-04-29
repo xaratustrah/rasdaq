@@ -33,18 +33,18 @@ N_STEPS = 2 ** ADC_RES
 
 # Assing pin numbers
 
-LED = 31
-SCLK = 23
-MISO = 21
 MOSI = 19
+MISO = 21
+SCLK = 23
 CS = 29
+LED = 31
 
-RNG0 = 3
-RNG1 = 5
-RNG2 = 7
-MODD = 11
-RDDY = 13
-PWWR = 15
+RNG0 = 11
+RNG1 = 13
+RNG2 = 15
+MODD = 7
+RDDY = 8
+PWWR = 10
 
 
 # SCI Funktion
