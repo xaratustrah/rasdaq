@@ -2,13 +2,24 @@
 
 import spidev
 import time
+import RPi.GPIO as gpio
 
 spi = spidev.SpiDev()
-spi.open(0, 1)
+spi.open(0, 0)
+gpio.setmode(gpio.BOARD)
+LED = 31
+INP = 33
+
+gpio.setup(LED, gpio.OUT)
+gpio.setup(INP, gpio.IN)
+
+led_state = False
 
 while True:
-    antwort = spi.xfer([1, 128, 0])
-if 0 <= antwort[1] <= 3:
-    wert = ((antwort[1] * 256) + antwort[2]) * 0.00322
-print("{}".format(wert))
-time.sleep(0.5)
+    resp = spi.xfer([6, 0, 0])
+    adcv = (resp[1] << 8) + resp[2]
+    print(adcv)
+    if gpio.input(INP):
+        led_state = not led_state
+        gpio.output(LED, led_state)
+    time.sleep(0.1)
