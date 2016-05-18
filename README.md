@@ -20,7 +20,7 @@ The code consists of a separate parts:
 please refer to the more detailed [gist](https://gist.github.com/xaratustrah/4efc5001f1bbcce47e02e2343ba29b87).
 
 #### Hardware connection **spi-dev**
-First you have to enable SPI function in `raspi-config`. Here you connect the SPI interface to the MCP3208. Remember it you choose pin 24, then your device will be known as `/dev/spi0.0` and for pin 26 it will be `/dev/spi0.1`. 
+First you have to enable SPI function in `raspi-config`. Here you connect the SPI interface to the MCP3208. Since SPI interface can handle 2 devices, remember if you choose pin 24 as CS, then your device will be known as `/dev/spi0.0` and for pin 26 it will be `/dev/spi0.1`. 
 
 
 | Name | Pin No. |
