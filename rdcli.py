@@ -107,6 +107,7 @@ def start_server(host, port):
     except(EOFError, KeyboardInterrupt):
         print('\nUser input cancelled. Aborting...')
         gpio.cleanup()
+        spi.close()
 
 
 def start_client(host, port):
