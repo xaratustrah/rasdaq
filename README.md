@@ -36,6 +36,22 @@ First you have to enable SPI function in `raspi-config`. Here you connect the SP
 
 As you can see, an additional LED is connected to the raspberry with a 330 ohm resistor in between.
 
+For accessing different channels on **MCP3208** you may choose the following commands. The reason is that you have to keep talking to the device in order to keep the clock running while the chip select signal is low, so that the device can respond accordingly. In the current implementation of the `spidev` is such that the chipselect is taken down per `xfer` command, and released afterwards. So unfortunately it seems that chip select can not be released from within the `xfer` command. This means you can not access different channels of MCP3208 at once, but need to send one `xfer` command for each channel.
+
+| channel | command                     |
+|---------|-----------------------------|
+| 0       |spi.xfer([0x06, 0x00, 0x00]) |
+| 1       |spi.xfer([0x06, 0x40, 0x00]) |
+| 2       |spi.xfer([0x06, 0x80, 0x00]) |
+| 3       |spi.xfer([0x06, 0xC0, 0x00]) |
+| 4       |spi.xfer([0x07, 0x00, 0x00]) |
+| 5       |spi.xfer([0x07, 0x40, 0x00]) |
+| 6       |spi.xfer([0x07, 0x80, 0x00]) |
+| 7       |spi.xfer([0x07, 0xC0, 0x00]) |
+
+These values can be sent as binary or decimal of course.
+
+
 #### Hardware connection
 Follow the description on the tutorial mentioned above. Additionally what has been changed here is the following pin numbering:
 
