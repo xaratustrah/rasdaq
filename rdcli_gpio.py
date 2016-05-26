@@ -156,7 +156,9 @@ def start_client(host, port):
         for update_nbr in range(50):
             string = sock.recv().decode("utf-8")
             topic, time, stat_bits, value_str = string.split()
-            # value = float(value) * CALIBRATION / N_STEPS
+            current_range = int(stat_bits[-3:], 2)
+            range_str = RANGE_DIC[current_range]
+
             # do the calibration
             value_float = float(value_str) * CAL_SLOPE + CAL_ITCPT
 
@@ -166,7 +168,7 @@ def start_client(host, port):
             # set to 2 decimal points
             value = int(value * 100) / 100
 
-            print(time, stat_bits, value_str, value)
+            print(time, stat_bits, value_str, value, range_str)
 
     except(ConnectionRefusedError):
         print('Server not running. Aborting...')

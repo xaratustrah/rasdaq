@@ -12,7 +12,7 @@ from mainwindow_ui import Ui_MainWindow
 from aboutdialog_ui import Ui_AbooutDialog
 from zmq_listener import ZMQListener
 from ipaddress import ip_address
-from calibration as cal
+from calibration import *
 from version import __version__
 
 
@@ -30,8 +30,6 @@ class mainWindow(QMainWindow, Ui_MainWindow):
         super(mainWindow, self).__init__()
         self.setupUi(self)
         self.thread = QThread()
-        self.range_dict_esr_system = {0: '1000mA', 1: '300mA', 2: '100mA', 3: '30mA', 4: '10mA', 5: '3mA', 6: '1mA',
-                                      7: '0.3mA'}
 
         self.connected = False
 
@@ -91,7 +89,7 @@ class mainWindow(QMainWindow, Ui_MainWindow):
         # get the message and split it
         topic, time, stat_bits, value_str = message.split()
         current_range = int(stat_bits[-3:], 2)
-        range_str = self.range_dict_esr_system[current_range]
+        range_str = RANGE_DIC[current_range]
 
         self.label_time_stamp.setText(time)
         self.label_status.setText(stat_bits)
