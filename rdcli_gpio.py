@@ -8,10 +8,10 @@ Xaratustrah
 """
 
 import datetime, time
-import random
 import argparse
 import zmq
 import os
+from calibration as cal
 from version import __version__
 
 if os.name == 'posix' and os.uname().machine == 'armv7l':
@@ -153,11 +153,20 @@ def start_client(host, port):
         topic_filter = '10001'
         sock.setsockopt_string(zmq.SUBSCRIBE, topic_filter)
 
-        for update_nbr in range(5):
+        for update_nbr in range(50):
             string = sock.recv().decode("utf-8")
-            topic, time, stat_bits, value = string.split()
+            topic, time, stat_bits, value_str = string.split()
             # value = float(value) * CALIBRATION / N_STEPS
-            print(time, stat_bits, value)
+            # do the calibration
+            value_float = float(value_str) * CAL_SLOPE + CAL_ITCPT
+
+            # convert binary to float value
+            value = value_float * RAIL_VOLTAGE / ADC_QUANTIZATION
+
+            # set to 2 decimal points
+            value = int(value * 100) / 100
+
+            print(time, stat_bits, value_str, value)
 
     except(ConnectionRefusedError):
         print('Server not running. Aborting...')

@@ -12,15 +12,8 @@ from mainwindow_ui import Ui_MainWindow
 from aboutdialog_ui import Ui_AbooutDialog
 from zmq_listener import ZMQListener
 from ipaddress import ip_address
+from calibration as cal
 from version import __version__
-
-# Calibration constants
-CAL_SLOPE = 1216.5958576739247
-CAL_ITCPT = -15.558682952735126
-
-# ADC Voltage
-RAIL_VOLTAGE = 3.3
-ADC_QUANTIZATION = 2 ** 12  # for 12 bit ADC
 
 
 class mainWindow(QMainWindow, Ui_MainWindow):
