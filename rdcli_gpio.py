@@ -126,8 +126,10 @@ def start_server(host, port):
     try:
         while True:
             topic = '10001'  # just a number for identification
-            # value = round(random.random() * 10, 3)
+
             stat_bits = get_gpio_status_bits()
+            # force set status bits to range 5
+            stat_bits = '000101'
             value = get_adc_data(0, SCLK, MOSI, MISO, CS)
             current_time = datetime.datetime.now().strftime('%Y-%m-%d@%H:%M:%S.%f')
             messagedata = current_time + ' ' + stat_bits + ' ' + str(value)
