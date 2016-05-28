@@ -24,8 +24,8 @@ if os.name == 'posix' and os.uname().machine == 'armv7l':
 # sleep time in seconds
 SLEEP_TIME = 0.2
 
-# client file size inmega bytes
-FILE_SIZE_MB = 0.001
+# client file size in kilo bytes
+FILE_SIZE_KB = 10
 
 # Assing pin numbers
 
@@ -143,7 +143,7 @@ def start_server(host, port):
 
 
 def start_client(host, port):
-    max_file_count = int(FILE_SIZE_MB * 1e6 / 100)
+    max_file_count = int(FILE_SIZE_MB * 1e3 / 100)
 
     context = zmq.Context()
     print('Client started. ctrl-c to abort.\n')
@@ -153,7 +153,7 @@ def start_client(host, port):
         topic_filter = '10001'
         sock.setsockopt_string(zmq.SUBSCRIBE, topic_filter)
 
-        current_time = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+        current_time = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
 
         with open('{}.txt'.format(current_time), 'w') as f:
 
