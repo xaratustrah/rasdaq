@@ -25,7 +25,7 @@ if os.name == 'posix' and os.uname().machine == 'armv7l':
 SLEEP_TIME = 0.2
 
 # client file size in kilo bytes
-FILE_SIZE_KB = 10
+FILE_SIZE_KB = 20
 
 # Assing pin numbers
 
@@ -168,11 +168,11 @@ def start_client(host, port):
 
                     # set to 3 decimal points
                     value = int(value * 1000) / 1000
-                    full_value_description = '{}, Stats: {}, Range: 0-{}mA, ADC: {}, Current: {}mA'.format(time,
-                                                                                                           stat_bits,
-                                                                                                           range_str,
-                                                                                                           value_str,
-                                                                                                           value)
+                    full_value_description = '{}, Stat: {}, Rng: 0-{}mA, ADC: {}, Current: {}mA\n'.format(time,
+                                                                                                             stat_bits,
+                                                                                                             range_str,
+                                                                                                             value_str,
+                                                                                                             value)
                     print(full_value_description)
                     f.write(full_value_description)
 
