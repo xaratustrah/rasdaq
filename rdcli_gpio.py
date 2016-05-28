@@ -25,7 +25,7 @@ if os.name == 'posix' and os.uname().machine == 'armv7l':
 SLEEP_TIME = 0.2
 
 # client file size in kilo bytes
-FILE_SIZE_KB = 20
+FILE_SIZE_KB = 500
 
 # Assing pin numbers
 
