@@ -154,7 +154,7 @@ def start_client(host, port):
         sock.setsockopt_string(zmq.SUBSCRIBE, topic_filter)
 
         current_time = datetime.datetime.now().strftime('%Y-%m-%d@%H:%M:%S.%f')
-        with open('{}.txt'.format(current_time)) as f:
+        with open('{}.txt'.format(current_time), 'w') as f:
 
             for update_nbr in range(max_file_count):
                 string = sock.recv().decode("utf-8")
