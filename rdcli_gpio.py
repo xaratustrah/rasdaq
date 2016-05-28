@@ -143,7 +143,7 @@ def start_server(host, port):
 
 
 def start_client(host, port):
-    max_file_count = int(FILE_SIZE_MB * 1e3 / 100)
+    max_file_count = int(FILE_SIZE_KB * 1e3 / 100)
 
     context = zmq.Context()
     print('Client started. ctrl-c to abort.\n')
