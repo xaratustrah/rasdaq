@@ -24,13 +24,6 @@ if os.name == 'posix' and os.uname().machine == 'armv7l':
 # sleep time in seconds
 SLEEP_TIME = 0.2
 
-# calibration constant
-CALIBRATION = 3.3
-
-# resolution of the ADC
-ADC_RES = 12
-N_STEPS = 2 ** ADC_RES
-
 # Assing pin numbers
 
 MOSI = 19
@@ -77,7 +70,7 @@ def get_adc_data(adCh, CLKPin, DINPin, DOUTPin, CSPin):
 
     # Datenabruf
     adchvalue = 0  # Wert auf 0 zuruecksetzen
-    for i in range(ADC_RES + 1):
+    for i in range(12 + 1):  # 12 bit ADC
         gpio.output(CLKPin, gpio.HIGH)
         gpio.output(CLKPin, gpio.LOW)
         adchvalue <<= 1  # 1 Postition nach links schieben
@@ -159,18 +152,15 @@ def start_client(host, port):
             string = sock.recv().decode("utf-8")
             topic, time, stat_bits, value_str = string.split()
             current_range = int(stat_bits[-3:], 2)
-            range_str = RANGE_DIC[current_range]
+            range_str = RANGE_DIC_mA[current_range]
 
             # do the calibration
-            value_float = float(value_str) * CAL_SLOPE + CAL_ITCPT
+            value = get_calibrated_value(int(value_str))
 
-            # convert binary to float value
-            value = value_float * RAIL_VOLTAGE / ADC_QUANTIZATION
+            # set to 3 decimal points
+            value = int(value * 1000) / 1000
 
-            # set to 2 decimal points
-            value = int(value * 100) / 100
-
-            print(time, stat_bits, value_str, value, range_str)
+            print('{}, {}, {}, {}mA of {}mA'.format(time, stat_bits, value_str, value, range_str))
 
     except(ConnectionRefusedError):
         print('Server not running. Aborting...')
