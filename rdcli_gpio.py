@@ -25,7 +25,7 @@ if os.name == 'posix' and os.uname().machine == 'armv7l':
 SLEEP_TIME = 0.2
 
 # client file size inmega bytes
-FILE_SIZE_MB = 0.0001
+FILE_SIZE_MB = 0.001
 
 # Assing pin numbers
 
@@ -153,7 +153,8 @@ def start_client(host, port):
         topic_filter = '10001'
         sock.setsockopt_string(zmq.SUBSCRIBE, topic_filter)
 
-        current_time = datetime.datetime.now().strftime('%Y-%m-%d@%H:%M:%S.%f')
+        current_time = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+
         with open('{}.txt'.format(current_time), 'w') as f:
 
             for update_nbr in range(max_file_count):
