@@ -159,8 +159,8 @@ def start_client(host, port):
 
             # set to 3 decimal points
             value = int(value * 1000) / 1000
-
-            print('{}, {}, {}, {}mA of {}mA'.format(time, stat_bits, value_str, value, range_str))
+            print('{}, Stats: {}, Range: 0-{}mA, ADC: {}, Current: {}mA'.format(time, stat_bits, range_str, value_str,
+                                                                                value))
 
     except(ConnectionRefusedError):
         print('Server not running. Aborting...')

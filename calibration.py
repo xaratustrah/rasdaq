@@ -23,11 +23,12 @@ RANGE_DIC_mA = {0: '1000', 1: '300', 2: '100', 3: '30', 4: '10', 5: '3', 6: '1',
 
 
 def plot_calibration_curve(filename):
+    # import things here not to conflict with systems that don't have these
     import numpy as np
     import numpy.ma as ma
     from scipy import stats
     import matplotlib.pyplot as plt
-    
+
     dat = np.genfromtxt(filename)
     currents = np.array([0.1, 1.0, 2.0, 3.0])
     values = np.array([])
