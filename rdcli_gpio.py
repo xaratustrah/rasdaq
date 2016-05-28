@@ -24,6 +24,9 @@ if os.name == 'posix' and os.uname().machine == 'armv7l':
 # sleep time in seconds
 SLEEP_TIME = 0.2
 
+# client file size inmega bytes
+FILE_SIZE_MB = 0.0001
+
 # Assing pin numbers
 
 MOSI = 19
@@ -140,6 +143,8 @@ def start_server(host, port):
 
 
 def start_client(host, port):
+    max_file_count = int(FILE_SIZE_MB * 1e6 / 100)
+
     context = zmq.Context()
     print('Client started. ctrl-c to abort.\n')
     try:
@@ -148,19 +153,26 @@ def start_client(host, port):
         topic_filter = '10001'
         sock.setsockopt_string(zmq.SUBSCRIBE, topic_filter)
 
-        for update_nbr in range(50):
-            string = sock.recv().decode("utf-8")
-            topic, time, stat_bits, value_str = string.split()
-            current_range = int(stat_bits[-3:], 2)
-            range_str = RANGE_DIC_mA[current_range]
+        current_time = datetime.datetime.now().strftime('%Y-%m-%d@%H:%M:%S.%f')
+        with open('{}.txt'.format(current_time)) as f:
 
-            # do the calibration
-            value = get_calibrated_value(int(value_str))
+            for update_nbr in range(max_file_count):
+                string = sock.recv().decode("utf-8")
+                topic, time, stat_bits, value_str = string.split()
+                current_range = int(stat_bits[-3:], 2)
+                range_str = RANGE_DIC_mA[current_range]
 
-            # set to 3 decimal points
-            value = int(value * 1000) / 1000
-            print('{}, Stats: {}, Range: 0-{}mA, ADC: {}, Current: {}mA'.format(time, stat_bits, range_str, value_str,
-                                                                                value))
+                # do the calibration
+                value = get_calibrated_value(int(value_str))
+
+                # set to 3 decimal points
+                value = int(value * 1000) / 1000
+                full_value_description = '{}, Stats: {}, Range: 0-{}mA, ADC: {}, Current: {}mA'.format(time, stat_bits,
+                                                                                                       range_str,
+                                                                                                       value_str,
+                                                                                                       value)
+                print(full_value_description)
+                f.write(full_value_description)
 
     except(ConnectionRefusedError):
         print('Server not running. Aborting...')
