@@ -153,9 +153,8 @@ def start_client(host, port):
         topic_filter = '10001'
         sock.setsockopt_string(zmq.SUBSCRIBE, topic_filter)
 
-        current_time = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
-
         while (True):
+            current_time = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
             with open('{}.txt'.format(current_time), 'w') as f:
 
                 for update_nbr in range(max_size_inside_loop):
