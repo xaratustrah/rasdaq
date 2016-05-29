@@ -25,7 +25,7 @@ if os.name == 'posix' and os.uname().machine == 'armv7l':
 SLEEP_TIME = 0.2
 
 # client file size in kilo bytes
-FILE_SIZE_KB = 20
+FILE_SIZE_KB = 100
 
 MAX_SIZE_INSIDE_LOOP = int(FILE_SIZE_KB * 1000 / 51) + 1
 
