@@ -27,6 +27,8 @@ SLEEP_TIME = 0.2
 # client file size in kilo bytes
 FILE_SIZE_KB = 250
 
+max_size_inside_loop = int(FILE_SIZE_KB * 1e3 / 82) + 1
+
 # Assing pin numbers
 
 MOSI = 19
@@ -143,8 +145,6 @@ def start_server(host, port):
 
 
 def start_client(host, port):
-    max_size_inside_loop = int(FILE_SIZE_KB * 1e3 / 82) + 1
-
     context = zmq.Context()
     print('Client started. ctrl-c to abort.\n')
     try:
