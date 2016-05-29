@@ -25,9 +25,9 @@ if os.name == 'posix' and os.uname().machine == 'armv7l':
 SLEEP_TIME = 0.2
 
 # client file size in kilo bytes
-FILE_SIZE_KB = 250
+FILE_SIZE_KB = 20
 
-max_size_inside_loop = int(FILE_SIZE_KB * 1e3 / 82) + 1
+MAX_SIZE_INSIDE_LOOP = int(FILE_SIZE_KB * 1000 / 51) + 1
 
 # Assing pin numbers
 
@@ -157,7 +157,7 @@ def start_client(host, port):
             current_time = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
             with open('{}.txt'.format(current_time), 'w') as f:
                 f.write('#Time, Status, Range [mA], ADC Value, Calibrated current [mA]\n')
-                for update_nbr in range(max_size_inside_loop):
+                for update_nbr in range(MAX_SIZE_INSIDE_LOOP):
                     string = sock.recv().decode("utf-8")
                     topic, time, stat_bits, value_str = string.split()
                     current_range = int(stat_bits[-3:], 2)
