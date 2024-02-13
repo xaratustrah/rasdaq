@@ -121,7 +121,7 @@ It is interesting to note that smaller devices in the family, such as **MCP3201*
 
 |    |    |    |    |
 |----|----|----|----|
-- - x x|x x x x|x x x x|x x x x|
+|- - x x|x x x x|x x x x|x x x x|
 
 So basically one can put all zeros in as:
 
