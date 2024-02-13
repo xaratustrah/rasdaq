@@ -1,7 +1,7 @@
 # rasdaq (RASpberry pi Data AcQuisition)
 
 `rasdaq` is a client and server code for Raspberry Pi to acquire ADC Data from [MCP8208](http://www.microchip.com/wwwproducts/en/MCP3208) 12-bit ADC converter chip.
-![rdgui](https://raw.githubusercontent.com/xaratustrah/rasdaq/master/rsrc/screenshot.png)
+![rdgui](https://raw.githubusercontent.com/xaratustrah/rasdaq/main/rdgui/rsrc/screenshot.png)
 
 
 ## Installation
@@ -53,9 +53,10 @@ To print out the help, type:
 
 #### Board and Schematics
 
-![rasdaq](https://raw.githubusercontent.com/xaratustrah/rasdaq/master/rsrc/rasdaq_case.png)
+![rasdaq](https://raw.githubusercontent.com/xaratustrah/rasdaq/main/rdgui/rsrc/rasdaq_case.jpg)
 
-The schematics has been creating using [KiCAD](https://www.kicad.org/). The schematics file is included in the project. A PDF version of the schematics (connection plan) can be found [here](https://github.com/xaratustrah/rasdaq/blob/main/rsrc/rasdaq.kicad_sch.pdf).
+
+The schematics has been creating using [KiCAD](https://www.kicad.org/). The schematics file is included in the project. A PDF version of the schematics (connection plan) can be found [here](https://raw.githubusercontent.com/xaratustrah/rasdaq/main/rdgui/rsrc/rasdaq.kicad_sch.pdf).
 
 
 #### Hardware connection with **spi-dev** library
