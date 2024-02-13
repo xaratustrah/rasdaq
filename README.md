@@ -1,6 +1,6 @@
 # rasdaq (RASpberry pi Data AcQuisition)
 
-`rasdaq` is a client and server code for Raspberry Pi to acquire ADC Data from [MCP8208](http://www.microchip.com/wwwproducts/en/MCP3208) 12-bit ADC converter chip.
+`rasdaq` is a client and server code for Raspberry Pi to acquire ADC Data from [MCP8208](http://www.microchip.com/wwwproducts/en/MCP3208) and similar ADC converter chips.
 ![rdgui](https://raw.githubusercontent.com/xaratustrah/rasdaq/main/rdgui/rsrc/screenshot.png)
 
 
@@ -61,11 +61,9 @@ The schematics has been creating using [KiCAD](https://www.kicad.org/). The sche
 
 #### Hardware connection with **spi-dev** library
 
-The [SPI](https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus) interface is implemented using own SPI interface based on a python wrapper for [spidev](https://github.com/doceme/py-spidev). 
+The [SPI](https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus) interface is implemented using own SPI interface based on a python wrapper for [spidev](https://github.com/doceme/py-spidev). The underlying messaging is accomplished using [Zero MQ](http://zeromq.org/) library in PUB/SUB mode.
 
-The underlying messaging is accomplished using [Zero MQ](http://zeromq.org/) library in PUB/SUB mode.
-
-First you have to enable SPI function in `raspi-config`. Here you connect the SPI interface to the MCP3208. Since SPI interface can handle 2 devices, remember if you choose pin 24 as CS, then your device will be known as `/dev/spi0.0` and for pin 26 it will be `/dev/spi0.1`. 
+First you need to enable SPI function in `raspi-config`. Here you connect the SPI interface to the MCP3208. Since SPI interface can handle 2 devices, remember if you choose pin 24 as CS, then your device will be known as `/dev/spi0.0` and for pin 26 it will be `/dev/spi0.1`. 
 
 
 | Name | Pin No. |
