@@ -51,4 +51,4 @@ class Ui_AbooutDialog(object):
         self.labelDescription.setText(_translate("AbooutDialog", "<html><head/><body><p align=\"center\">A visualizer for sorage ring\'s DCCT current.</p><p align=\"center\"><br/></p><p align=\"center\"><br/></p><p align=\"center\">Copyright (c) Shahab Sanjari 2016.</p><p align=\"center\">License: GPLv3</p><p align=\"center\"><br/></p></body></html>"))
         self.pushButton_ok.setText(_translate("AbooutDialog", "OK"))
 
-import gui_rc
+from . import gui_rc

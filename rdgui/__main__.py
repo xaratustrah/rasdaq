@@ -1,15 +1,16 @@
 #!/usr/bin/env python
 """
-A client/server code for Raspberry Pi ADC input
+A data logger for Raspberry PI with ADC input
 
-Xaratustrah
+xaratustrah
 2016
+2024 update 
 
 """
 
 import sys
 from PyQt5.QtWidgets import QApplication
-from mainwindow import mainWindow
+from rdgui.mainwindow import mainWindow
 
 def main():
     """

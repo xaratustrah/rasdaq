@@ -1,1 +1,5 @@
 numpy
+pyzmq
+RPi.GPIO
+spidev
+loguru

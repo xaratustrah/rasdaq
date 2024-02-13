@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 """
-A client/server code for Raspberry Pi ADC input
+A data logger for Raspberry PI with ADC input
 
-Xaratustrah
+xaratustrah
 2016
+2024 update 
 
 """
 
@@ -11,28 +12,23 @@ import datetime, time
 import random
 import argparse
 import zmq
-import os
-from version import __version__
+import os, sys
+from loguru import logger
+import tomllib
 
-if os.name == 'posix' and os.uname().machine == 'armv7l':
+from .version import __version__
+
+if os.name == "posix" and os.uname().machine == "armv7l":
     try:
         import RPi.GPIO as gpio
         import spidev
     except RuntimeError:
-        print("""Error importing RPi.GPIO!  This is probably because you need superuser privileges.
-                You can achieve this by using 'sudo' to run your script""")
+        print("""Error importing Raspberry Pi libraries!""")
+else:
+    print("Are you running the code on a Raspberry Pi?")
+    exit()
 
-# sleep time in seconds
-SLEEP_TIME = 0.2
-
-# calibration constant
-CALIBRATION = 3.3
-
-# resolution of the ADC
-ADC_RES = 12
-N_STEPS = 2 ** ADC_RES
-
-# Assing GPIO pin numbers
+# Raspberry PI pin assignment
 
 # Output pins
 LED = 31
@@ -69,7 +65,10 @@ def gpio_setup():
     gpio.setup(RNG0, gpio.IN)
 
 
-def start_server(host, port):
+def start_server(host, port, config_dic):
+    
+    refresh_period = config_dic['refresh_period']
+    
     # setup SPI
     spi = spidev.SpiDev()
     spi.open(0, 0)
@@ -80,10 +79,10 @@ def start_server(host, port):
     context = zmq.Context()
     sock = context.socket(zmq.PUB)
 
-    print("tcp://{}:{}".format(host, port))
+    logger.info("tcp://{}:{}".format(host, port))
     sock.bind("tcp://{}:{}".format(host, port))
 
-    print('Server started. ctrl-c to abort.\n')
+    logger.success('Server started. ctrl-c to abort.\n')
     try:
         while True:
             topic = '10001'  # just a number for identification
@@ -97,22 +96,26 @@ def start_server(host, port):
             value = (resp[1] << 8) + resp[2]
             messagedata = current_time + ' ' + stat_bits + ' ' + str(value)
             sock.send_string("{} {}".format(topic, messagedata))
-            print("{} {}".format(topic, messagedata))
+            
+            logger.info("{} {}".format(topic, messagedata))
 
             led_state = not led_state
             gpio.output(LED, led_state)
 
-            time.sleep(SLEEP_TIME)
+            time.sleep(refresh_period)
 
     except(EOFError, KeyboardInterrupt):
-        print('\nUser input cancelled. Aborting...')
+        logger.success('\nUser input cancelled. Aborting...')
         gpio.cleanup()
         spi.close()
 
 
-def start_client(host, port):
+def start_client(host, port, config_dic):
+    
+    adc_res, calibration = config_dic['adc_res'], config_dic['calibration']
+    
     context = zmq.Context()
-    print('Client started. ctrl-c to abort.\n')
+    logger.info('Client started. ctrl-c to abort.\n')
     try:
         sock = context.socket(zmq.SUB)
         sock.connect("tcp://{}:{}".format(host, port))
@@ -122,14 +125,15 @@ def start_client(host, port):
         for update_nbr in range(5):
             string = sock.recv().decode("utf-8")
             topic, time, stat_bits, value = string.split()
-            # value = float(value) * CALIBRATION / N_STEPS
-            print(time, stat_bits, value)
+            # n_steps = 2 ** adc_res
+            # value = float(value) * calibration / n_steps
+            logger.info(time, stat_bits, value)
 
     except(ConnectionRefusedError):
-        print('Server not running. Aborting...')
+        logger.error('Server not running. Aborting...')
 
     except(EOFError, KeyboardInterrupt):
-        print('\nUser input cancelled. Aborting...')
+        logger.success('\nUser input cancelled. Aborting...')
 
 
 def main():
@@ -137,14 +141,25 @@ def main():
     parser.add_argument('--host', nargs=1, type=str, help='Host address', default='127.0.0.1')
     parser.add_argument('--port', nargs=1, type=int, help='Port number', default=1234)
     parser.add_argument('--version', action='version', version=__version__)
+    parser.add_argument(
+        "--config",
+        nargs=1,
+        type=str,
+        default=None,
+        help="Path and name of the config TOML file.",
+    )
+
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--client', action='store_true', help='Start client')
     group.add_argument('--server', action='store_true', help='Start server')
+
     parser.set_defaults(server=False)
     parser.set_defaults(client=False)
 
+    logger.remove(0)
+    logger.add(sys.stdout, level="INFO")
+
     args = parser.parse_args()
-    # check the first switches
 
     if isinstance(args.host, list):
         host = args.host[0]
@@ -156,12 +171,32 @@ def main():
     else:
         port = args.port
 
+    config_dic = None
+    
+    if args.config:
+        try:
+            # load config file
+            with open(args.config[0], "r") as f:
+                config_dic = toml.load(f)
+
+            for key in ["calibration", "refresh_period", "adc_res"]:
+                assert key in config_dic.keys()
+
+        except:
+            logger.error("Config file does not have required format.")
+            exit()
+
+    else:
+        logger.error("Please provide a config file.")
+        exit()
+
+
     if args.server:
 
-        start_server(host, port)
+        start_server(host, port, config_dic)
 
     elif args.host:
-        start_client(host, port)
+        start_client(host, port, config_dic)
 
     else:
         parser.print_help()

@@ -8,12 +8,14 @@ Xaratustrah
 
 from PyQt5.QtWidgets import QMainWindow, QDialog, QInputDialog, QLineEdit
 from PyQt5.QtCore import Qt, QCoreApplication, QThread, QTimer
-from mainwindow_ui import Ui_MainWindow
-from aboutdialog_ui import Ui_AbooutDialog
-from zmq_listener import ZMQListener
 from ipaddress import ip_address
 from calibration import *
-from version import __version__
+
+from rdcli.version import __version__
+
+from .mainwindow_ui import Ui_MainWindow
+from .aboutdialog_ui import Ui_AbooutDialog
+from .zmq_listener import ZMQListener
 
 
 class mainWindow(QMainWindow, Ui_MainWindow):

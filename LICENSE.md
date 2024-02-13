@@ -1,6 +1,6 @@
 ## License
 
-Copyright © 2014-2023 Shahab Sanjari (xaratustrah)
+Copyright © 2016-2024 Shahab Sanjari (xaratustrah)
 
 This work is licensed under multiple licenses:
 
