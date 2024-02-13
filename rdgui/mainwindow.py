@@ -9,13 +9,22 @@ Xaratustrah
 from PyQt5.QtWidgets import QMainWindow, QDialog, QInputDialog, QLineEdit
 from PyQt5.QtCore import Qt, QCoreApplication, QThread, QTimer
 from ipaddress import ip_address
-from calibration import *
 
 from rdcli.version import __version__
 
 from .mainwindow_ui import Ui_MainWindow
 from .aboutdialog_ui import Ui_AbooutDialog
 from .zmq_listener import ZMQListener
+
+CAL_SLOPE = 0.9801675611142459
+CAL_ITCPT = -0.012535071714850021
+
+# ADC Voltage
+RAIL_VOLTAGE = 3.3
+ADC_QUANTIZATION = 2 ** 12  # for 12 bit ADC
+
+# calibration range in mA
+RANGE_DIC_mA = {0: '1000', 1: '300', 2: '100', 3: '30', 4: '10', 5: '3', 6: '1', 7: '0.3'}
 
 
 class mainWindow(QMainWindow, Ui_MainWindow):

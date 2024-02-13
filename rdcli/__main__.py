@@ -14,7 +14,7 @@ import argparse
 import zmq
 import os, sys
 from loguru import logger
-import tomllib
+import toml
 
 from .version import __version__
 
@@ -112,7 +112,7 @@ def start_server(host, port, config_dic):
 
 def start_client(host, port, config_dic):
     
-    adc_res, calibration = config_dic['adc_res'], config_dic['calibration']
+    adc_resolution, reference_voltage = config_dic['adc_resolution'], config_dic['reference_voltage']
     
     context = zmq.Context()
     logger.info('Client started. ctrl-c to abort.\n')
@@ -125,8 +125,8 @@ def start_client(host, port, config_dic):
         for update_nbr in range(5):
             string = sock.recv().decode("utf-8")
             topic, time, stat_bits, value = string.split()
-            # n_steps = 2 ** adc_res
-            # value = float(value) * calibration / n_steps
+            # n_steps = 2 ** adc_resolution
+            # value = float(value) * reference_voltage / n_steps
             logger.info(time, stat_bits, value)
 
     except(ConnectionRefusedError):
@@ -179,7 +179,7 @@ def main():
             with open(args.config[0], "r") as f:
                 config_dic = toml.load(f)
 
-            for key in ["calibration", "refresh_period", "adc_res"]:
+            for key in ["reference_voltage", "refresh_period", "adc_resolution"]:
                 assert key in config_dic.keys()
 
         except:
