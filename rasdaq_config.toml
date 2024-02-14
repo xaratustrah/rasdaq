@@ -3,4 +3,4 @@
 reference_voltage = 3.3 # Volts
 refresh_period = 0.5 # Seconds
 adc_resolution = 12
-num_average = 20
+num_average = 4

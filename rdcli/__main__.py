@@ -108,6 +108,8 @@ def start_server(host, port, config_dic):
     # setup SPI
     spi = spidev.SpiDev()
     spi.open(0, 0)
+    spi.max_speed_hz = 5000
+
 
     # setup GPIO
     gpio_setup()
