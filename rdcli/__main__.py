@@ -88,18 +88,26 @@ def read_adc_channel(spi, channel):
 def read_all_adc_channels(spi, config_dic):
     num_average = config_dic['num_average']
     
-    pot0, pot1, pot2, pot3 = 0, 0, 0, 0
+    ch0, ch1, ch2, ch3, ch4, ch5, ch6, ch7 = 0, 0, 0, 0, 0, 0, 0, 0
     # do many measurements and average
     for i in range(num_average):
-        pot0 += read_adc_channel(spi, 0)
-        pot1 += read_adc_channel(spi, 1)
-        pot2 += read_adc_channel(spi, 2)
-        pot3 += read_adc_channel(spi, 3)
+        ch0 += read_adc_channel(spi, 0)
+        ch1 += read_adc_channel(spi, 1)
+        ch2 += read_adc_channel(spi, 2)
+        ch3 += read_adc_channel(spi, 3)
+        ch4 += read_adc_channel(spi, 4)
+        ch5 += read_adc_channel(spi, 5)
+        ch6 += read_adc_channel(spi, 6)
+        ch7 += read_adc_channel(spi, 7)
     return [
-        int(pot0 / num_average),
-        int(pot1 / num_average),
-        int(pot2 / num_average),
-        int(pot3 / num_average),
+        int(ch0 / num_average),
+        int(ch1 / num_average),
+        int(ch2 / num_average),
+        int(ch3 / num_average),
+        int(ch4 / num_average),
+        int(ch5 / num_average),
+        int(ch6 / num_average),
+        int(ch7 / num_average),
     ]
 
 def start_server(host, port, config_dic):
