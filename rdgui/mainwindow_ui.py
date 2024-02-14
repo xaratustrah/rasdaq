@@ -109,7 +109,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "rdgui"))
-        self.groupBox.setTitle(_translate("MainWindow", "ESR current [mA]"))
+        self.groupBox.setTitle(_translate("MainWindow", "Current [mA]"))
         self.groupBox_3.setTitle(_translate("MainWindow", "Info"))
         self.label_3.setText(_translate("MainWindow", "Time stamp:"))
         self.label_4.setText(_translate("MainWindow", "Status:"))
