@@ -61,7 +61,7 @@ def gpio_setup():
     gpio.setup(RNG1, gpio.IN)
     gpio.setup(RNG0, gpio.IN)
 
-def read_adc_channel(channel):
+def read_adc_channel(spi, channel):
     msg = (
         0x00
         if channel == 0
@@ -84,15 +84,15 @@ def read_adc_channel(channel):
 
     return value
 
-def read_all_adc_channels():
+def read_all_adc_channels(spi):
     num_avg = 20
     pot0, pot1, pot2, pot3 = 0, 0, 0, 0
     # do many measurements and average
     for i in range(num_avg):
-        pot0 += read_adc_channel(0)
-        pot1 += read_adc_channel(1)
-        pot2 += read_adc_channel(2)
-        pot3 += read_adc_channel(3)
+        pot0 += read_adc_channel(spi, 0)
+        pot1 += read_adc_channel(spi, 1)
+        pot2 += read_adc_channel(spi, 2)
+        pot3 += read_adc_channel(spi, 3)
     return [
         int(pot0 / num_avg),
         int(pot1 / num_avg),
@@ -123,11 +123,11 @@ def start_server(host, port, config_dic):
             topic = '10001'  # just a number for identification
             # check status bits
             stat_bits = get_gpio_status_bits()
-            # read SPI device 0,0 channel 0 single ended
-            resp = spi.xfer([6, 0, 0])
+
+            value = read_all_adc_channels(spi)
+
             # check time
             current_time = datetime.datetime.now().strftime('%Y-%m-%d@%H:%M:%S.%f')
-            value = read_all_adc_channels()
             messagedata = current_time + ' ' + stat_bits + ' ' + ','.join(value)
             
             sock.send_string("{} {}".format(topic, messagedata))
