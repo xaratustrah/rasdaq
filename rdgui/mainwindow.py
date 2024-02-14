@@ -46,6 +46,8 @@ class mainWindow(QMainWindow, Ui_MainWindow):
 
         # Connect signals
         self.connect_signals()
+        
+        self.zeromq_listener_10001 = None
 
     def on_push_button_clicked(self):
         if self.pushButton.isChecked():
@@ -123,7 +125,8 @@ class mainWindow(QMainWindow, Ui_MainWindow):
             self.lcdNumber.display(0)
 
     def closeEvent(self, event):
-        self.zeromq_listener_10001.running = False
+        if self.zeromq_listener_10001:
+            self.zeromq_listener_10001.running = False            
         self.thread.terminate()
         self.thread.quit()
         self.thread.wait()
