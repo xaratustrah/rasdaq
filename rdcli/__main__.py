@@ -129,7 +129,7 @@ def start_server(host, port, config_dic):
             
             # check time
             current_time = datetime.datetime.now().strftime('%Y-%m-%d@%H:%M:%S.%f')
-            messagedata = current_time + ' ' + stat_bits + ' ' + ','.join(map(str, value))
+            messagedata = current_time + ' ' + stat_bits + ' ' + ','.join(map(str, value_list))
             
             sock.send_string("{} {}".format(topic, messagedata))
             logger.info("{} {}".format(topic, messagedata))
