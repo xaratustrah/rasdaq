@@ -24,9 +24,6 @@ if os.name == "posix" and os.uname().machine == "armv7l":
         import spidev
     except RuntimeError:
         print("""Error importing Raspberry Pi libraries!""")
-else:
-    print("Are you running the code on a Raspberry Pi?")
-    exit()
 
 # Raspberry PI pin assignment
 

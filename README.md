@@ -38,7 +38,7 @@ You can run the server on the raspberry by:
 
     ./rdcli --host IP_ADRESS --port 1234 --server
 
-and accordingly the client by:
+and accordingly the client on any computer by:
 
     ./rdcli --host IP_ADRESS --port 1234 --client
 
