@@ -160,11 +160,11 @@ def start_client(host, port, config_dic):
         sock.setsockopt_string(zmq.SUBSCRIBE, topic_filter)
 
         while True:
-            string = sock.recv().decode("utf-8")
-            topic, time, stat_bits, value = string.split()
+            msg_string = sock.recv().decode("utf-8")
+            topic, time, stat_bits, value = msg_string.split(' ')
             # n_steps = 2 ** adc_resolution
             # value = float(value) * reference_voltage / n_steps
-            logger.info(time, stat_bits, value)
+            logger.info(msg_string)
 
     except(ConnectionRefusedError):
         logger.error('Server not running. Aborting...')

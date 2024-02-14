@@ -102,14 +102,18 @@ class mainWindow(QMainWindow, Ui_MainWindow):
         # get the message and split it
         topic, time, stat_bits, value_str = message.split()
         current_range = int(stat_bits[-3:], 2)
-        range_str = RANGE_DIC[current_range]
+        range_str = RANGE_DIC_mA[current_range]
 
         self.label_time_stamp.setText(time)
         self.label_status.setText(stat_bits)
         self.label_range.setText(range_str)
 
         # do the calibration
-        value_float = float(value_str) * CAL_SLOPE + CAL_ITCPT
+
+        value_list_int = [int(i) for i in value_str.split(',')]
+        
+        # do the calibration
+        value_float = value_list_int[0] * CAL_SLOPE + CAL_ITCPT
 
         # convert binary to float value
         value = value_float * RAIL_VOLTAGE / ADC_QUANTIZATION
