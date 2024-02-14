@@ -72,7 +72,7 @@ def read_adc_channel(spi, channel):
         else 0xC0
     )
 
-    resp = self.spi.xfer([0x06, msg, 0x00])
+    resp = spi.xfer([0x06, msg, 0x00])
     value = (resp[1] << 8) + resp[2]
     value = int(value)
 
