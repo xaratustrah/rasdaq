@@ -84,20 +84,21 @@ def read_adc_channel(spi, channel):
 
     return value
 
-def read_all_adc_channels(spi):
-    num_avg = 20
+def read_all_adc_channels(spi, config_dic):
+    num_average = config_dic['num_average']
+    
     pot0, pot1, pot2, pot3 = 0, 0, 0, 0
     # do many measurements and average
-    for i in range(num_avg):
+    for i in range(num_average):
         pot0 += read_adc_channel(spi, 0)
         pot1 += read_adc_channel(spi, 1)
         pot2 += read_adc_channel(spi, 2)
         pot3 += read_adc_channel(spi, 3)
     return [
-        int(pot0 / num_avg),
-        int(pot1 / num_avg),
-        int(pot2 / num_avg),
-        int(pot3 / num_avg),
+        int(pot0 / num_average),
+        int(pot1 / num_average),
+        int(pot2 / num_average),
+        int(pot3 / num_average),
     ]
 
 def start_server(host, port, config_dic):
@@ -124,11 +125,11 @@ def start_server(host, port, config_dic):
             # check status bits
             stat_bits = get_gpio_status_bits()
 
-            value = read_all_adc_channels(spi)
+            value_list = read_all_adc_channels(spi, config_dic)
             
             # check time
             current_time = datetime.datetime.now().strftime('%Y-%m-%d@%H:%M:%S.%f')
-            messagedata = current_time + ' ' + stat_bits + ' ' + ','.join(value)
+            messagedata = current_time + ' ' + stat_bits + ' ' + ','.join(map(str, value))
             
             sock.send_string("{} {}".format(topic, messagedata))
             logger.info("{} {}".format(topic, messagedata))
@@ -213,7 +214,7 @@ def main():
             with open(args.config[0], "r") as f:
                 config_dic = toml.load(f)
 
-            for key in ["reference_voltage", "refresh_period", "adc_resolution"]:
+            for key in ["reference_voltage", "refresh_period", "adc_resolution", "num_average"]:
                 assert key in config_dic.keys()
 
         except:

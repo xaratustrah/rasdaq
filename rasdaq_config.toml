@@ -1,5 +1,6 @@
 # RASDAQ config file
 
-reference_voltage = 3.3
-refresh_period = 0.2
+reference_voltage = 3.3 # Volts
+refresh_period = 0.5 # Seconds
 adc_resolution = 12
+num_average = 20
