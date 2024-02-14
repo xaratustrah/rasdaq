@@ -125,10 +125,10 @@ def start_server(host, port, config_dic):
             stat_bits = get_gpio_status_bits()
 
             value = read_all_adc_channels(spi)
-            print(value.__class__, value)
+            
             # check time
             current_time = datetime.datetime.now().strftime('%Y-%m-%d@%H:%M:%S.%f')
-            messagedata = current_time + ' ' + stat_bits + ' '# + ','.join(value)
+            messagedata = current_time + ' ' + stat_bits + ' ' + ','.join(value)
             
             sock.send_string("{} {}".format(topic, messagedata))
             logger.info("{} {}".format(topic, messagedata))
