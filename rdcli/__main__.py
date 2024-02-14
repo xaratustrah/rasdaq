@@ -84,7 +84,7 @@ def read_adc_channel(channel):
 
     return value
 
-def read_all_channels(self):
+def read_all_channels():
     num_avg = 20
     pot0, pot1, pot2, pot3 = 0, 0, 0, 0
     # do many measurements and average
