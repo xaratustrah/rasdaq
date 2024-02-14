@@ -159,7 +159,7 @@ def start_client(host, port, config_dic):
         topic_filter = '10001'
         sock.setsockopt_string(zmq.SUBSCRIBE, topic_filter)
 
-        for update_nbr in range(5):
+        while True:
             string = sock.recv().decode("utf-8")
             topic, time, stat_bits, value = string.split()
             # n_steps = 2 ** adc_resolution
