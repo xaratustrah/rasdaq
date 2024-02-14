@@ -70,7 +70,7 @@ def read_adc_channel(spi, channel):
         else (0x07, 0x00) if channel == 4
         else (0x07, 0x40) if channel == 5
         else (0x07, 0x80) if channel == 6
-        else (0x07, 0xC0) if channel == 7
+        else (0x07, 0xC0)
     )
 
     resp = spi.xfer([msg_up, msg_dn, 0x00])
