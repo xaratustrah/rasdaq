@@ -62,14 +62,14 @@ def gpio_setup():
     gpio.setup(RNG0, gpio.IN)
 
 def read_adc_channel(spi, channel):
-    msg_up, msg_dn = (
-        0x06, 0x00 
+    (msg_up, msg_dn) = (
+        (0x06, 0x00)
         if channel == 0
-        else 0x06, 0x40
+        else (0x06, 0x40)
         if channel == 1
-        else 0x06, 0x80
+        else (0x06, 0x80)
         if channel == 2
-        else 0x06, 0xC0
+        else (0x06, 0xC0)
     )
 
     resp = spi.xfer([msg_up, msg_dn, 0x00])
