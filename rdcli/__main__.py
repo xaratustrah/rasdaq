@@ -61,6 +61,44 @@ def gpio_setup():
     gpio.setup(RNG1, gpio.IN)
     gpio.setup(RNG0, gpio.IN)
 
+def read_adc_channel(channel):
+    msg = (
+        0x00
+        if channel == 0
+        else 0x40
+        if channel == 1
+        else 0x80
+        if channel == 2
+        else 0xC0
+    )
+
+    resp = self.spi.xfer([0x06, msg, 0x00])
+    value = (resp[1] << 8) + resp[2]
+    value = int(value)
+
+    # clip value
+    if value <= 0:
+        value = 0
+    elif value > 4095:
+        value = 4095
+
+    return value
+
+def read_all_channels(self):
+    num_avg = 20
+    pot0, pot1, pot2, pot3 = 0, 0, 0, 0
+    # do many measurements and average
+    for i in range(num_avg):
+        pot0 += self.read_adc_channel(0)
+        pot1 += self.read_adc_channel(1)
+        pot2 += self.read_adc_channel(2)
+        pot3 += self.read_adc_channel(3)
+    return [
+        int(pot0 / num_avg),
+        int(pot1 / num_avg),
+        int(pot2 / num_avg),
+        int(pot3 / num_avg),
+    ]
 
 def start_server(host, port, config_dic):
     
@@ -89,11 +127,10 @@ def start_server(host, port, config_dic):
             resp = spi.xfer([6, 0, 0])
             # check time
             current_time = datetime.datetime.now().strftime('%Y-%m-%d@%H:%M:%S.%f')
-
-            value = (resp[1] << 8) + resp[2]
-            messagedata = current_time + ' ' + stat_bits + ' ' + str(value)
-            sock.send_string("{} {}".format(topic, messagedata))
+            value = read_all_channels()
+            messagedata = current_time + ' ' + stat_bits + ' ' + ','.join(value)
             
+            sock.send_string("{} {}".format(topic, messagedata))
             logger.info("{} {}".format(topic, messagedata))
 
             led_state = not led_state

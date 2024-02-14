@@ -36,16 +36,22 @@ The code consists of a separate parts:
 
 You can run the server on the raspberry by:
 
-    ./rdcli --host IP_ADRESS --port 1234 --server
+    rdcli --host IP_ADDRESS_OF_RASPBERRY_PI  --port 1234 --config rasdaq_config.toml  --server
 
 and accordingly the client on any computer by:
 
-    ./rdcli --host IP_ADRESS --port 1234 --client
+    rdcli --host IP_ADDRESS_OF_RASPBERRY_PI  --port 1234 --config rasdaq_config.toml  --client
 
 It is recommended to use numerals for IP address.
+
+
 To print out the help, type:
 
-    ./rdcli --help
+    rdcli --help
+
+If you do not want to install the code, you can call it as a module:
+
+    python3 -m rdcli ...
 
 
 
